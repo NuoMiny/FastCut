@@ -276,23 +276,24 @@ class ImageCropper(tk.Tk):
         self.save_tip_label.config(text="未保存")
 
     def crop_image(self, x1, y1, x2, y2):
-        # 将画布坐标转换为图片坐标（考虑缩放比例）
+
+    # 将画布坐标转换为图片坐标（考虑缩放比例）
         original_width, original_height = self.original_image.size
         image_width, image_height = self.current_photo.width(), self.current_photo.height()
+        # 计算缩放比例        
+        scale_width = 1.0 * original_width / image_width
+        scale_height = 1.0 * original_height / image_height
 
-        scale_width = 1.0 * original_height / image_width  # 错误：使用了original_height计算宽度缩放
-        scale_height = 1.0 * original_width / image_height  # 错误：使用了original_width计算高度缩放
-
-        x1_img = int((x1 - self.photo_x) * scale_height)  # 错误：x坐标使用了scale_height
-        y1_img = int((y1 - self.photo_y) * scale_width)  # 错误：y坐标使用了scale_width
-        x2_img = int((x2 - self.photo_x) * scale_height)  # 错误：同上
-        y2_img = int((y2 - self.photo_y) * scale_width)  # 错误：同上
-
+        x1_img = int((x1 - self.photo_x) * scale_width)
+        y1_img = int((y1 - self.photo_y) * scale_height)
+        x2_img = int((x2 - self.photo_x) * scale_width)
+        y2_img = int((y2 - self.photo_y) * scale_height)
         area = (min(x1_img, x2_img), min(y1_img, y2_img), max(x1_img, x2_img), max(y1_img, y2_img))
         print(x1_img, y1_img, x2_img, y2_img, "||", image_height, original_height)
 
         # 裁剪图片
         cropped_image = self.original_image.crop(area)
+        # cropped_image.show()
         return cropped_image
 
     def save_cropped_image(self, event):
